@@ -9,6 +9,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@notifee/react-native": "^7.8.0",
     "react": "16.8.1",
     "react-native": "0.61.2"
   },
@@ -18,10 +19,13 @@
     "@react-native-community/eslint-config": "^0.0.3",
     "babel-jest": "^24.1.0",
     "jest": "^24.1.0",
-    "metro-react-native-babel-preset": "^0.51.1",
+    "metro-react-native-babel-preset": "0.59.0",
     "react-test-renderer": "16.8.1"
   },
   "jest": {
     "preset": "react-native"
+  },
+  "resolutions": {
+    "@babel/traverse": "7.16.7"
   }
 }
