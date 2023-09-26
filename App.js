@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import notifee, {TimestampTrigger, TriggerType} from '@notifee/react-native';
 import {
   SafeAreaView,
   StyleSheet,
@@ -14,6 +15,7 @@ import {
   View,
   Text,
   StatusBar,
+  Button
 } from 'react-native';
 
 import {
@@ -25,6 +27,54 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 const App: () => React$Node = () => {
+  async function onDisplayNotification() {
+    // Request permissions (required for iOS)
+    await notifee.requestPermission();
+
+    // Create a channel (required for Android)
+    const channelId = await notifee.createChannel({
+      id: 'default',
+      name: 'Default Channel',
+    });
+
+    // Display a notification
+    await notifee.displayNotification({
+      title: 'Notification Title',
+      body: 'Main body content of the notification',
+      android: {
+        channelId,
+        smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
+        // pressAction is needed if you want the notification to open the app when pressed
+        pressAction: {
+          id: 'default',
+        },
+      },
+    });
+  }
+
+  async function onCreateTriggerNotification() {
+    const date = new Date(Date.now());
+    date.setHours(11);
+    date.setMinutes(59);
+
+    const trigger = {
+      type: TriggerType.TIMESTAMP,
+      timestamp: date.getTime(),
+    };
+
+    await notifee.createTriggerNotification(
+      {
+        id: '123',
+        title: 'Meeting with Jane',
+        body: 'Today at 11:13am',
+        android: {
+          channelId: 'your-channel-id',
+        },
+      },
+      trigger,
+    );
+  }
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -39,6 +89,18 @@ const App: () => React$Node = () => {
             </View>
           )}
           <View style={styles.body}>
+            <View>
+              <Button
+                title="Display Notification"
+                onPress={() => onDisplayNotification()}
+              />
+            </View>
+            <View>
+              <Button
+                title="Schedule Notification"
+                onPress={() => onCreateTriggerNotification()}
+              />
+            </View>
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>Step One</Text>
               <Text style={styles.sectionDescription}>
